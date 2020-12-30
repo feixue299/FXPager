@@ -1,0 +1,16 @@
+PODS:
+  - FXPager (0.1.0)
+
+DEPENDENCIES:
+  - FXPager (from `../`)
+
+EXTERNAL SOURCES:
+  FXPager:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  FXPager: a8592f027b9d8261d0501e43f7fbcc91cfac360f
+
+PODFILE CHECKSUM: 70b1ecff7c0b0224a32bbb45d5e4ae58f4e83b16
+
+COCOAPODS: 1.9.0.beta.2
