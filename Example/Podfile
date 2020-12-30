@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'FXPager_Example' do
+  pod 'FXPager', :path => '../'
+
+  target 'FXPager_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
