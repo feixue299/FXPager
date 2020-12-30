@@ -7,23 +7,33 @@
 
 import UIKit
 
-public protocol PagerViewProtocol {
+public protocol PagerViewProtocol: class {
     func numberOfPages() -> Int
-    func categoryPager(pages: Int) -> PagerProtocol
-    func contentPager(pages: Int) -> PagerProtocol
+    func categoryPager(page: Int) -> PagerProtocol
+    func contentPager(page: Int) -> PagerProtocol
 }
 
 open class PagerView: UIView {
     
-    open weak var delegate: PagerViewProtocol?
+    open weak var delegate: PagerViewProtocol? {
+        didSet {
+            reloadData()
+        }
+    }
     
-    private let categoryScrollView = UIScrollView()
     private let categoryStackView = UIStackView()
-    private let contentScrollView = UIScrollView()
     private let contentStackView = UIStackView()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        categoryStackView.spacing = 10
+        categoryStackView.alignment = .center
+        categoryStackView.axis = .horizontal
+        categoryStackView.distribution = .fillProportionally
+        
+        let categoryScrollView = UIScrollView()
+        let contentScrollView = UIScrollView()
         
         addSubview(categoryScrollView)
         categoryScrollView.addSubview(categoryStackView)
@@ -32,6 +42,7 @@ open class PagerView: UIView {
         
         categoryScrollView.translatesAutoresizingMaskIntoConstraints = false
         contentScrollView.translatesAutoresizingMaskIntoConstraints = false
+        categoryStackView.translatesAutoresizingMaskIntoConstraints = false
         
         categoryScrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         categoryScrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -40,6 +51,12 @@ open class PagerView: UIView {
         contentScrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         contentScrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         contentScrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        categoryStackView.leadingAnchor.constraint(equalTo: categoryScrollView.leadingAnchor).isActive = true
+        categoryStackView.topAnchor.constraint(equalTo: categoryScrollView.topAnchor).isActive = true
+        categoryStackView.trailingAnchor.constraint(equalTo: categoryScrollView.trailingAnchor).isActive = true
+        categoryStackView.bottomAnchor.constraint(equalTo: categoryScrollView.bottomAnchor).isActive = true
+        categoryStackView.heightAnchor.constraint(equalTo: categoryScrollView.heightAnchor).isActive = true
     }
     
     open func reloadData() {
@@ -49,14 +66,22 @@ open class PagerView: UIView {
     }
     
     private func buildCategory(delegate: PagerViewProtocol) {
-        
+        for subView in categoryStackView.subviews {
+            subView.removeFromSuperview()
+        }
+        for index in 0..<delegate.numberOfPages() {
+            let label = UILabel()
+            label.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            label.text = delegate.categoryPager(page: index).title
+            categoryStackView.addArrangedSubview(label)
+        }
     }
     
     private func buildContent(delegate: PagerViewProtocol) {
         
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
